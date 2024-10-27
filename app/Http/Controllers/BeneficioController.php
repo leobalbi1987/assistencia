@@ -1,5 +1,6 @@
 <?php
 
+// app/Http/Controllers/BeneficioController.php
 namespace App\Http\Controllers;
 
 use App\Models\Beneficio;
@@ -8,68 +9,66 @@ use Illuminate\Http\Request;
 
 class BeneficioController extends Controller
 {
+    // Exibe a página de listagem
     public function index()
     {
-        $beneficios = Beneficio::with('beneficiario')->paginate(10);
+        $beneficios = Beneficio::with('beneficiario')->paginate(10); // Paginação
         return view('beneficios.index', compact('beneficios'));
     }
 
+    // Exibe o formulário de criação
     public function create()
     {
-        $beneficiarios = Beneficiario::all();
+        $beneficiarios = Beneficiario::all(); // Assumindo que você já tem os beneficiários
         return view('beneficios.create', compact('beneficiarios'));
     }
 
+    // Processa o formulário de criação e grava no banco
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $validatedData = $request->validate([
             'beneficiario_id' => 'required|exists:beneficiarios,id',
-            'tipo' => 'required|string|max:255',
+            'tipo' => 'required|string',
             'data_concessao' => 'required|date',
-            'data_revisao' => 'required|date|after:data_concessao',
-            'status' => 'required|in:ativo,suspenso,cancelado',
-            'observacoes' => 'nullable|string'
+            'data_revisao' => 'nullable|date',
+            'status' => 'required|string',
+            'observacoes' => 'nullable|string',
         ]);
 
-        Beneficio::create($validated);
+        Beneficio::create($validatedData); // Cria um novo benefício
 
-        return redirect()->route('beneficios.index')
-            ->with('success', 'Benefício cadastrado com sucesso.');
+        return redirect()->route('beneficios.index')->with('success', 'Benefício criado com sucesso!');
     }
 
-    public function show(Beneficio $beneficio)
-    {
-        return view('beneficios.show', compact('beneficio'));
-    }
-
+    // Exibe o formulário de edição
     public function edit(Beneficio $beneficio)
     {
         $beneficiarios = Beneficiario::all();
         return view('beneficios.edit', compact('beneficio', 'beneficiarios'));
     }
 
+    // Processa a edição e salva no banco
     public function update(Request $request, Beneficio $beneficio)
     {
-        $validated = $request->validate([
+        $validatedData = $request->validate([
             'beneficiario_id' => 'required|exists:beneficiarios,id',
-            'tipo' => 'required|string|max:255',
+            'tipo' => 'required|string',
             'data_concessao' => 'required|date',
-            'data_revisao' => 'required|date|after:data_concessao',
-            'status' => 'required|in:ativo,suspenso,cancelado',
-            'observacoes' => 'nullable|string'
+            'data_revisao' => 'nullable|date',
+            'status' => 'required|string',
+            'observacoes' => 'nullable|string',
         ]);
 
-        $beneficio->update($validated);
+        $beneficio->update($validatedData); // Atualiza o benefício
 
-        return redirect()->route('beneficios.index')
-            ->with('success', 'Benefício atualizado com sucesso.');
+        return redirect()->route('beneficios.index')->with('success', 'Benefício atualizado com sucesso!');
     }
 
+    // Exclui um benefício
     public function destroy(Beneficio $beneficio)
     {
         $beneficio->delete();
 
-        return redirect()->route('beneficios.index')
-            ->with('success', 'Benefício removido com sucesso.');
+        return redirect()->route('beneficios.index')->with('success', 'Benefício excluído com sucesso!');
     }
 }

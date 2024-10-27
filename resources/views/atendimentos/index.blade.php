@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    @push('scripts')
+    {{-- @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Dados para o gráfico de atendimentos por mês
@@ -73,5 +73,5 @@
             }
         );
     </script>
-    @endpush
+    @endpush --}}
 </x-app-layout>
